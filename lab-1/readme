@@ -1,0 +1,15 @@
+How to Build and Run:
+
+Steps (in VS Code terminal):
+1. Start the echo server
+    a.
+        g++ server.cpp -o server.exe -lws2_32
+    b.
+        .\server.exe 8080
+
+2. Start the netprobe program
+    a. 
+        g++ netprobe.cpp -o netprobe.exe -lws2_32
+    b. 
+        .\netprobe localhost 8080 100 32 1048576 
+

@@ -1,0 +1,29 @@
+How to Build and Run:
+
+Steps (in VS Code terminal):
+1. Compile all files
+    a.
+        g++ server.cpp -o server.exe -lws2_32
+    b.
+        g++ client-a.cpp -o client-a.exe -lws2_32
+    c. 
+        g++ client-b.cpp -o client-b.exe -lws2_32
+
+2. Start the server
+    a. 
+        Open a new terminal
+    b.
+        ./server.exe
+
+3. Start client a
+    a. 
+        Open a new terminal
+    b.
+        ./client-a.exe
+
+4. Start client b
+    a. 
+        Open a new terminal
+    b.
+        ./client-b.exe
+        
