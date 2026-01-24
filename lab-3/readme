@@ -1,0 +1,11 @@
+How to Build and Run:
+
+Steps (in VS Code terminal):
+1. Compile program.cpp
+    g++ program.cpp -o program.exe -lws2_32
+
+2. Start the program with the DIY gather
+    .\program.exe flowers.bmp output.bmp diy
+
+2. Start the program with the sense-reversing barrier
+    .\program.exe flowers.bmp output.bmp nodiy
