@@ -10,7 +10,7 @@
 
 #define PORT "8081"
 
-// Helper funct to 
+// Helper funct to send all data
 static int send_all(SOCKET s, const char* buf, int len)
 {
     int sent = 0;

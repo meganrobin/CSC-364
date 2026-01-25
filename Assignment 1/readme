@@ -1,0 +1,11 @@
+How to Build and Run:
+
+Steps (in VS Code terminal):
+1. Compile the spawn server
+    g++ spawn.cpp -o spawn.exe -lws2_32
+
+2. Compile the calc client
+    g++ calc.cpp -o calc.exe -lws2_32
+
+2. Start the spawn server to spawn 10 instances of the calc program
+    ./spawn.exe calc.exe 10
