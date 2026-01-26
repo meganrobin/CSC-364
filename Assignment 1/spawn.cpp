@@ -51,6 +51,19 @@ struct BMPInfoHeader
     unsigned int biClrImportant; // important colors (0)
 };
 
+// Helper funct - Recieve all bytes
+int recv_all(SOCKET s, char* buf, int len)
+{
+    int recvd = 0;
+    while (recvd < len)
+    {
+        int n = recv(s, buf + recvd, len - recvd, 0);
+        if (n <= 0) return -1;
+        recvd += n;
+    }
+    return recvd;
+}
+
 int main(int argc, char* argv[])
 {
     // Extract command line args
@@ -166,10 +179,9 @@ int main(int argc, char* argv[])
         int startRow = i * rowsPerClient;
         int rows = (i == n_clients - 1) ? (g_height - startRow) : rowsPerClient;
 
-        recv(clients[i],
+        recv_all(clients[i],
             (char*)&g_data[startRow * g_rowSize],
-            rows * g_rowSize,
-            0);
+            rows * g_rowSize);
 
         closesocket(clients[i]);
     }

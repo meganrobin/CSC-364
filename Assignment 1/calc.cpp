@@ -19,6 +19,19 @@ int adjust(int x, int c)
     return y;
 }
 
+// Helper funct - Recieve all bytes
+int recv_all(SOCKET s, char* buf, int len)
+{
+    int recvd = 0;
+    while (recvd < len)
+    {
+        int n = recv(s, buf + recvd, len - recvd, 0);
+        if (n <= 0) return -1;
+        recvd += n;
+    }
+    return recvd;
+}
+
 int main(int argc, char* argv[])
 {
     printf("Calculator client started.\n");
@@ -38,14 +51,14 @@ int main(int argc, char* argv[])
     connect(sock, (sockaddr*)&server, sizeof(server));
 
     int rows, pixelsPerRow;
-    recv(sock, (char*)&rows, sizeof(int), 0);
-    recv(sock, (char*)&pixelsPerRow, sizeof(int), 0);
+    recv_all(sock, (char*)&rows, sizeof(int));
+    recv_all(sock, (char*)&pixelsPerRow, sizeof(int));
 
     int rowSize = pixelsPerRow * 3;
     int totalBytes = rows * rowSize;
 
     unsigned char* buffer = new unsigned char[totalBytes];
-    recv(sock, (char*)buffer, totalBytes, 0);
+    recv_all(sock, (char*)buffer, totalBytes);
 
     for (int i = 0; i < totalBytes; i++)
         buffer[i] = (unsigned char)adjust(buffer[i], contrast);
