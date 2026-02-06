@@ -19,13 +19,33 @@ using namespace std;
 #pragma comment(lib, "Ws2_32.lib")
 
 #define PORT "8081"
-#define CONTRAST 100
 
 // Global Variables
 unsigned char *g_data;
 int g_width;
 int g_height;
 int g_rowSize;
+
+// Mutex
+typedef struct
+{
+    atomic_flag f;
+} lock_t;
+
+static void init(lock_t* m)
+{
+    atomic_flag_clear(&m->f); // f = 0
+}
+
+static void lock(lock_t* m) // t1 t2
+{
+    while (atomic_flag_test_and_set(&m->f)) { /* spin */ }
+}
+
+static void unlock(lock_t* m)
+{
+    atomic_flag_clear(&m->f);
+}
 
 struct BMPFileHeader
 {
@@ -66,9 +86,8 @@ int recv_all(SOCKET s, char* buf, int len)
 
 int main(int argc, char* argv[])
 {
-    // Extract command line args
-    const char* executable = argv[1];
-    int n_clients = atoi(argv[2]);
+    // Declare static # of clients
+    int n_clients = 4;
 
     // Open the bitmap file
     // The variable file is now a pointer to the open bitmap file
@@ -127,12 +146,12 @@ int main(int argc, char* argv[])
         
         // Build command line
         wchar_t cmd[256];
-        swprintf(cmd, 256, L"%hs.exe %d", executable, CONTRAST);
+        swprintf(cmd, 256, L"calc.exe");
 
         wprintf(L"Spawning client with command line: %ls\n", cmd);
         // Start child process
-        if (!CreateProcessW(NULL,    // No module name (use command line)
-                           cmd, // Command line
+        if (!CreateProcessW(NULL,   // No module name (use command line)
+                           cmd,     // Command line
                            NULL,    // Process handle not inheritable
                            NULL,    // Thread handle not inheritable
                            FALSE,   // Set handle inheritance to FALSE
@@ -147,7 +166,7 @@ int main(int argc, char* argv[])
             return 1;
         }
 
-        // Close process and thread handles.
+        // Close process and thread handles
         CloseHandle(pi.hProcess);
         CloseHandle(pi.hThread);
     }
@@ -159,33 +178,51 @@ int main(int argc, char* argv[])
         clients.push_back(client);
     }
 
-    int rowsPerClient = g_height / n_clients;
+    lock_t row_lock;
+    int next_row = 0;
+    init(&row_lock); 
 
-    // Send each client: the number of rows it will go through, pixels per row, then all the rows data
-    for (int i = 0; i < n_clients; i++)
+    bool done = false;
+    int finished_clients = 0;
+
+    while (finished_clients < n_clients)
     {
-        int startRow = i * rowsPerClient;
-        int rows = (i == n_clients - 1) ? (g_height - startRow) : rowsPerClient;
+        for (int i = 0; i < n_clients; i++)
+        {
+            int row;
 
-        send(clients[i], (char*)&rows, sizeof(int), 0);
-        send(clients[i], (char*)&g_width, sizeof(int), 0);
+            lock(&row_lock);
+            if (next_row >= g_height)
+            {
+                row = -1;
+            }
+            else
+            {
+                row = next_row++;
+            }
+            unlock(&row_lock);
 
-        send(clients[i],
-            (char*)&g_data[startRow * g_rowSize],
-            rows * g_rowSize,
-            0);
-    }
+            send(clients[i], (char*)&row, sizeof(int), 0);
 
-    for (int i = 0; i < n_clients; i++)
-    {
-        int startRow = i * rowsPerClient;
-        int rows = (i == n_clients - 1) ? (g_height - startRow) : rowsPerClient;
+            if (row == -1)
+            {
+                finished_clients++;
+                closesocket(clients[i]);
+                continue;
+            }
 
-        recv_all(clients[i],
-            (char*)&g_data[startRow * g_rowSize],
-            rows * g_rowSize);
+            // Send row metadata + row data
+            send(clients[i], (char*)&g_width, sizeof(int), 0);
+            send(clients[i],
+                (char*)&g_data[row * g_rowSize],
+                g_rowSize,
+                0);
 
-        closesocket(clients[i]);
+            // Receive processed row
+            recv_all(clients[i],
+                (char*)&g_data[row * g_rowSize],
+                g_rowSize);
+        }
     }
 
     // Create the output BMP file
