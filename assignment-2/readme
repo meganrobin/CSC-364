@@ -1,0 +1,15 @@
+How to Build and Run:
+
+Steps (in VS Code terminal):
+1. Compile the GaussianBlur server
+    g++ GaussianBlur.cpp -o GaussianBlur.exe -lws2_32
+
+2. Compile the calc client
+    g++ calc.cpp -o calc.exe -lws2_32
+
+3. Start the blur server
+    ./GaussianBlur [n] [c] [bmp]
+
+    For example:
+    ./GaussianBlur 1 4 wolf.bmp
+    

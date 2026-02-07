@@ -7,5 +7,5 @@ Steps (in VS Code terminal):
 2. Compile the calc client
     g++ calc.cpp -o calc.exe -lws2_32
 
-2. Start the blur server
+3. Start the blur server
     ./blur.exe
