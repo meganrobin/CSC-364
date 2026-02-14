@@ -169,7 +169,6 @@ int main(int argc, char **argv)
     }
 
     // Do 1 stencil update
-
     for (int i = 1; i <= local_rows; i++)
     {
         for (int j = 1; j < width - 1; j++)
