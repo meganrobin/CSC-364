@@ -7,5 +7,5 @@ Steps (in VS Code terminal):
 2. Start the program with the DIY gather
     .\program.exe flowers.bmp output.bmp diy
 
-2. Start the program with the sense-reversing barrier
+3. Start the program with the sense-reversing barrier
     .\program.exe flowers.bmp output.bmp nodiy
