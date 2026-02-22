@@ -1,0 +1,15 @@
+How to Build and Run:
+
+Steps (in VS Code terminal):
+1. Run Part 1: 
+    a. Compile assignment3.cpp
+        C:\msys64\ucrt64\bin\g++.exe -g assignment3.cpp -I"C:/Program Files (x86)/Microsoft SDKs/MPI/Include" -L"C:/Program Files (x86)/Microsoft SDKs/MPI/Lib/x64" -lmsmpi -o assignment3.exe
+
+    b. Start the program with chosen number of processes (between 1-4, inclusive)
+        mpiexec -np 4 assignment3.exe
+
+2. Run Part 2: Matrix Multiplication
+    a. Compile matrix-multiplication.cpp
+        C:\msys64\ucrt64\bin\g++.exe -g matrix-multiplication.cpp -I"C:/Program Files (x86)/Microsoft SDKs/MPI/Include" -L"C:/Program Files (x86)/Microsoft SDKs/MPI/Lib/x64" -lmsmpi -o matrix-multiplication.exe
+    b. Start the program with with chosen number of processes and chosen number N for the NxN matrix
+        mpiexec -np 4 matrix-multiplication.exe 100
