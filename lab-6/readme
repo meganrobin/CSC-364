@@ -1,7 +1,7 @@
 How to Build and Run:
 
 Steps (in VS Code terminal):
-1. Compile MPI.cpp
+1. Compile lab6.cpp
     C:\msys64\ucrt64\bin\g++.exe -g lab6.cpp -I"C:/Program Files (x86)/Microsoft SDKs/MPI/Include" -L"C:/Program Files (x86)/Microsoft SDKs/MPI/Lib/x64" -lmsmpi -o lab6.exe
 
 2. Start the program
