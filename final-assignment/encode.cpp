@@ -47,7 +47,7 @@ int main(int argc, char** argv)
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    int key = atoi(argv[3]);
+    int key = atoi(argv[3]); // Key is the number that every byte in the bmp will be multiplied by
 
     unsigned char* entireFile;
     BMPFileHeader fh;
