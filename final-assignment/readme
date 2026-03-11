@@ -1,0 +1,14 @@
+How to Build and Run:
+
+Steps (in VS Code terminal):
+1. Compile encode.cpp
+    C:\msys64\ucrt64\bin\g++.exe -g encode.cpp -I"C:/Program Files (x86)/Microsoft SDKs/MPI/Include" -L"C:/Program Files (x86)/Microsoft SDKs/MPI/Lib/x64" -lmsmpi -o encode.exe
+
+2. Start the encode program (Args: input bmp, output xyz, key)
+    mpiexec -np 4 encode.exe flowers.bmp output.xyz 123
+
+3. Compile decode.cpp
+    C:\msys64\ucrt64\bin\g++.exe -g decode.cpp -I"C:/Program Files (x86)/Microsoft SDKs/MPI/Include" -L"C:/Program Files (x86)/Microsoft SDKs/MPI/Lib/x64" -lmsmpi -o decode.exe
+
+4. Start the decode program (Args: input xyz, output bmp, key)
+    mpiexec -np 4 decode.exe output.xyz result.bmp 123

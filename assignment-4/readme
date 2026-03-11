@@ -1,0 +1,16 @@
+How to Build and Run:
+
+Steps (in Google Colab):
+1. Set up runtime environment
+    Go to runtime tab -> change runtime type -> set hardware accelerator to T4
+
+2. Add matrix-multiplication.cu to the Colab workspace's files.
+
+3. Start the program by executing the following code cells
+    a.
+        !nvidia-smi
+    b.
+        !nvcc -arch=sm_75 -gencode=arch=compute_75,code=sm_75 matrix-multiplication.cu -o matrix-multiplication
+        !./matrix-multiplication
+
+
